@@ -6,9 +6,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 function HomePage() {
   const searchParams = useSearchParams();
-  const from = searchParams.get('from');
-  const customMsg = searchParams.get('msg');
+  const encoded = searchParams.get('x');
 
+  const [from, setFrom] = useState(null);
+  const [customMsg, setCustomMsg] = useState(null);
   const [animateKey, setAnimateKey] = useState(0);
   const [message, setMessage] = useState('');
   const [lastIndex, setLastIndex] = useState(null);
@@ -41,6 +42,21 @@ function HomePage() {
     'Catch this energy boost ⚡',
   ];
 
+  // Decode the x param (Base64 -> JSON)
+  useEffect(() => {
+    if (encoded) {
+      try {
+        const decoded = JSON.parse(decodeURIComponent(atob(encoded)));
+        setFrom(decoded.from || null);
+        setCustomMsg(decoded.msg || null);
+      } catch (err) {
+        setFrom(null);
+        setCustomMsg(null);
+      }
+    }
+  }, [encoded]);
+
+  // Load random affirmation + hearts
   useEffect(() => {
     const index = Math.floor(Math.random() * affirmations.length);
     setMessage(affirmations[index]);
@@ -71,12 +87,21 @@ function HomePage() {
       return;
     }
 
+    const payload = {
+      from: senderName,
+      msg: userMessage,
+    };
+
+    const encoded = btoa(encodeURIComponent(JSON.stringify(payload)));
     const base = window.location.origin;
-    const link = `${base}?from=${encodeURIComponent(senderName)}&msg=${encodeURIComponent(userMessage)}`;
+    const link = `${base}?x=${encoded}`;
+
     navigator.clipboard.writeText(link).then(() => {
       setCopied(true);
       setShowModal(false);
       setError('');
+      setSenderName('');
+      setUserMessage('');
       setTimeout(() => setCopied(false), 2000);
     }).catch(() => {
       setError('Something went wrong. Try copying again.');
@@ -92,10 +117,8 @@ function HomePage() {
 
   return (
     <div>
-      {/* Background sparkles */}
       <img src="/sparkles.png" alt="sparkles" className="sparkles" />
 
-      {/* Floating hearts */}
       {hearts.map(heart => (
         <div
           key={heart.id}
@@ -107,7 +130,6 @@ function HomePage() {
         />
       ))}
 
-      {/* From message */}
       {from && (
         <motion.p
           className="from-message"
@@ -115,11 +137,10 @@ function HomePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          {decodeURIComponent(from)} sent you this hug 💌
+          {from} sent you this hug 💌
         </motion.p>
       )}
 
-      {/* Custom message */}
       {customMsg && (
         <motion.p
           className="custom-message"
@@ -127,11 +148,10 @@ function HomePage() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          “{decodeURIComponent(customMsg)}”
+          “{customMsg}”
         </motion.p>
       )}
 
-      {/* Hug GIF */}
       <motion.img
         key={`gif-${animateKey}`}
         src="/hug.gif"
@@ -144,7 +164,6 @@ function HomePage() {
         transition={{ duration: 0.6 }}
       />
 
-      {/* Solo hug title + affirmation */}
       {!customMsg && (
         <>
           <AnimatePresence mode="wait">
@@ -173,7 +192,6 @@ function HomePage() {
         </>
       )}
 
-      {/* Buttons */}
       {from ? (
         <button className="hug-button" onClick={openReplyModal}>
           Send a Hug Back
@@ -191,7 +209,6 @@ function HomePage() {
 
       {copied && <p className="copied-message">Link copied to clipboard ✨</p>}
 
-      {/* Modal */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
@@ -222,7 +239,6 @@ function HomePage() {
   );
 }
 
-// ✅ Wrap for Vercel compatibility
 export default function HomePageWrapper() {
   return (
     <Suspense fallback={<div>loading hug...</div>}>
