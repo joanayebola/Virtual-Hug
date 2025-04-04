@@ -1,7 +1,8 @@
+/* Reset + Base */
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 body {
@@ -10,48 +11,29 @@ body {
   color: #9f1239;
   height: 100vh;
   width: 100vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   text-align: center;
+  padding: 1rem;
 }
 
-h1 {
-  font-size: 3rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-}
-
-p {
-  font-size: 1.25rem;
-  color: #be123c;
-  margin-top: 1rem;
-}
-
+/* Sparkle overlay */
 .sparkles {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.15;
   object-fit: cover;
+  opacity: 0.2;
   pointer-events: none;
   animation: pulse 4s ease-in-out infinite;
 }
 
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.1;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 0.25;
-  }
-}
-
+/* Floating Hearts */
 .heart {
   position: absolute;
   width: 20px;
@@ -97,6 +79,17 @@ p {
   }
 }
 
+/* Hug GIF */
+.hug-gif {
+  width: 180px;
+  height: auto;
+  margin: 1rem auto;
+  display: block;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Hug Again Button */
 .hug-button {
   margin-top: 2rem;
   padding: 0.75rem 1.5rem;
@@ -107,21 +100,108 @@ p {
   border-radius: 9999px;
   cursor: pointer;
   font-size: 1rem;
-  box-shadow: 0 0 10px rgba(244, 63, 94, 0.3);
   transition: all 0.3s ease;
-}
-
-.hug-gif {
-  width: 180px;
-  height: auto;
-  margin: 1rem auto;
-  display: block;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 12px rgba(244, 63, 94, 0.3);
 }
 
 .hug-button:hover {
   background-color: #e11d48;
   box-shadow: 0 0 25px rgba(244, 63, 94, 0.6);
   transform: scale(1.03);
+}
+
+/* Send Hug Button */
+.send-hug-button {
+  margin-top: 1rem;
+  padding: 0.6rem 1.2rem;
+  background-color: #f9a8d4;
+  color: #831843;
+  font-weight: bold;
+  border: none;
+  border-radius: 9999px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 12px rgba(249, 168, 212, 0.3);
+}
+
+.send-hug-button:hover {
+  background-color: #f472b6;
+  box-shadow: 0 0 20px rgba(249, 168, 212, 0.5);
+}
+
+/* Copied message */
+.copied-message {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #9d174d;
+  animation: fadeInOut 2s ease;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* “From” message */
+.from-message {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #9f1239;
+}
+
+/* Custom user message (via URL param) */
+.custom-message {
+  font-style: italic;
+  color: #be123c;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 228, 230, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  color: #831843;
+  text-align: left;
+}
+
+.modal h2 {
+  margin-bottom: 0.5rem;
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #9f1239;
+}
+
+.modal input,
+.modal textarea {
+  padding: 0.75rem;
+  border: 1px solid #f43f5e;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-family: inherit;
+  width: 100%;
 }
