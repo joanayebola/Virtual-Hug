@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 
-export default function HomePage() {
+function HomePage() {
   const searchParams = useSearchParams();
   const from = searchParams.get('from');
   const customMsg = searchParams.get('msg');
@@ -32,9 +32,13 @@ export default function HomePage() {
   ];
 
   const hugReplies = [
-    "Right back at you 🫶",
-    "Feeling your love, here’s mine 💌",
-    "Thank you ✨",
+    'Right back at you 🫶',
+    'Feeling your love, here’s mine 💌',
+    'Thinking of you too ✨',
+    'Hug loop initiated 🔁',
+    'You’re in my heart too',
+    'Softness returned with interest',
+    'Catch this energy boost ⚡',
   ];
 
   useEffect(() => {
@@ -80,8 +84,7 @@ export default function HomePage() {
   };
 
   const openReplyModal = () => {
-    const reply =
-      hugReplies[Math.floor(Math.random() * hugReplies.length)];
+    const reply = hugReplies[Math.floor(Math.random() * hugReplies.length)];
     setUserMessage(reply);
     setSenderName('');
     setShowModal(true);
@@ -172,10 +175,7 @@ export default function HomePage() {
 
       {/* Buttons */}
       {from ? (
-        <button
-          className="hug-button"
-          onClick={openReplyModal}
-        >
+        <button className="hug-button" onClick={openReplyModal}>
           Send a Hug Back
         </button>
       ) : (
@@ -219,5 +219,14 @@ export default function HomePage() {
         </div>
       )}
     </div>
+  );
+}
+
+// ✅ Wrap for Vercel compatibility
+export default function HomePageWrapper() {
+  return (
+    <Suspense fallback={<div>loading hug...</div>}>
+      <HomePage />
+    </Suspense>
   );
 }
